@@ -1,6 +1,8 @@
 const express = require("express");
 const router = new express.Router();
 const conn = require("../db/conn");
+const bodyparser = require("body-parser");
+const encoder = bodyparser.urlencoded();
 
 
 //register user
@@ -138,6 +140,28 @@ router.delete("/deleteuser/:id",(req,res)=>{
     })
 });
 
+
+//patient siginin
+
+router.post("/login",(req,res)=>{
+    const username= req.body.username;
+    const password= req.body.password;
+    conn.query("select * from users where name= ? and password = ?",[username,password] ,(error,results)=>{
+        if(error)
+        {
+            console.log(error)
+        }
+        else{
+            if(results.length>0)
+            {
+            res.send(results)            }
+            else{
+            res.send({message: "enter correct details"})
+            }
+   
+        }
+    })
+})
 
 
 
